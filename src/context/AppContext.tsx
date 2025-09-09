@@ -305,6 +305,8 @@ const AppContext = createContext<{
   clearCart: () => void;
   getCartTotal: () => number;
   getCartItemsCount: () => number;
+  updateProductStock: (productId: string, quantityToSubtract: number) => Promise<void>;
+  addRevenueFromOrder: (orderData: { productName: string; amount: number; quantity: number }) => Promise<void>;
 } | null>(null);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
