@@ -11,16 +11,11 @@ import {
   Users,
   TrendingUp,
   ShoppingBag,
-  Send,
   CheckCircle,
   XCircle,
-  Star,
-  Eye,
-  Heart,
   Menu,
   X,
   DollarSign,
-  PieChart
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -227,73 +222,6 @@ const DashboardPage: React.FC = () => {
       {/* Main content */}
       <div className="lg:ml-72">
         <div className="px-10 py-8">
-          {/* Mobile Header */}
-          <div className="lg:hidden mb-8 pt-20">
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h1 className="text-lg font-bold text-slate-800 mb-1">Optique</h1>
-                  <h1 className="text-lg font-bold text-slate-800 mb-1">AYO Figurine</h1>
-                  <h2 className="text-2xl font-bold text-slate-800">Administration</h2>
-                  <p className="text-slate-600 mt-1">Boutique de Figurines</p>
-                </div>
-                <div className="flex items-center space-x-2 flex-shrink-0">
-                  <Link
-                    to="/"
-                    className="p-2 text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all duration-300"
-                    title="Retour à l'accueil"
-                  >
-                    <Home className="w-5 h-5" />
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="p-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300"
-                    title="Déconnexion"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Navigation Cards */}
-          <div className="lg:hidden mb-8">
-            <div className="grid grid-cols-2 gap-4">
-              {sidebarItems.map(item => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`relative p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ${
-                    isActive(item.path, item.exact)
-                      ? 'ring-2 ring-amber-500 bg-gradient-to-br from-amber-50 to-orange-50'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                      isActive(item.path, item.exact)
-                        ? 'bg-gradient-to-br from-amber-500 to-orange-600 text-white'
-                        : 'bg-slate-100 text-slate-600'
-                    }`}>
-                      <item.icon className="w-6 h-6" />
-                    </div>
-                    <span className={`font-semibold ${
-                      isActive(item.path, item.exact) ? 'text-amber-600' : 'text-slate-700'
-                    }`}>
-                      {item.label}
-                    </span>
-                    {item.badge && item.badge > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[1.25rem] text-center font-bold">
-                        {item.badge}
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
           {isDashboardHome ? (
             <>
               {/* Dashboard Header */}
@@ -327,152 +255,63 @@ const DashboardPage: React.FC = () => {
                 ))}
               </div>
 
-              {/* Recent Activity */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
-                {/* Recent Products */}
-                <div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8">
-                  <div className="flex items-center mb-8">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                      <Package className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">
-                      Figurines Récentes
-                    </h3>
+              {/* Order Status */}
+              <div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8">
+                <div className="flex items-center mb-8">
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                    <ShoppingBag className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
                   </div>
-                  <div className="space-y-6">
-                    {(state.products || []).slice(0, 5).map(product => (
-                      <div key={product.id} className="flex items-center space-x-4 p-4 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl hover:shadow-md transition-all duration-300">
-                        <img
-                          src={product.images[0]}
-                          alt={product.name}
-                          className="w-12 h-12 lg:w-16 lg:h-16 object-cover rounded-2xl shadow-md"
-                        />
-                        <div className="flex-1">
-                          <p className="font-bold text-slate-800 line-clamp-1 text-sm lg:text-lg">
-                            {product.name}
-                          </p>
-                          <p className="text-slate-600 text-sm">
-                            {product.discount ? (
-                              <span>
-                                <span className="line-through text-slate-400">{product.originalPrice} DH</span>
-                                <span className="text-amber-600 font-bold ml-2">{product.price} DH</span>
-                              </span>
-                            ) : (
-                              `${product.price} DH`
-                            )}
-                          </p>
-                        </div>
-                        {(() => {
-                          const getStockStatus = (stock: number) => {
-                            if (stock > 5) return { color: 'text-green-800', bg: 'bg-green-100', icon: '✅' };
-                            if (stock > 0) return { color: 'text-orange-800', bg: 'bg-orange-100', icon: '🟧' };
-                            return { color: 'text-red-800', bg: 'bg-red-100', icon: '❌' };
-                          };
-                          const stockStatus = getStockStatus(product.stock || 0);
-                          return (
-                            <span className={`px-2 py-1 lg:px-3 lg:py-2 rounded-xl text-xs lg:text-sm font-bold ${stockStatus.bg} ${stockStatus.color}`}>
-                              {stockStatus.icon} {product.stock || 0}
-                            </span>
-                          );
-                        })()}
-                      </div>
-                    ))}
-                  </div>
-                  <Link
-                    to="/admin/dashboard/trips"
-                    className="block text-center bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold py-3 lg:py-4 rounded-2xl mt-8 hover:from-amber-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm lg:text-base"
-                  >
-                    Voir toutes les figurines
-                  </Link>
+                  <h3 className="text-xl lg:text-2xl font-bold text-slate-800">
+                    Commandes de Figurines
+                  </h3>
                 </div>
-
-                {/* Recent Messages */}
-                <div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8">
-                  <div className="flex items-center mb-8">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                      <MessageSquare className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl">
+                    <div className="flex items-center space-x-4">
+                      <CheckCircle className="w-5 h-5 lg:w-6 lg:h-6 text-blue-500" />
+                      <span className="text-sm lg:text-lg font-bold text-blue-700">Commandes Confirmées</span>
                     </div>
-                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">
-                      Messages Récents
-                    </h3>
+                    <span className="text-xl lg:text-2xl font-bold text-amber-600">
+                      {Array.isArray(state.messages) 
+                        ? state.messages.filter(m => m && m.orderStatus === 'confirmed').length 
+                        : 0}
+                    </span>
                   </div>
-                  <div className="space-y-6">
-                    {(state.messages || []).slice(0, 5).map(message => (
-                      <div key={message.id} className="border-l-4 border-orange-500 pl-6 p-4 bg-gradient-to-r from-slate-50 to-orange-50 rounded-r-2xl hover:shadow-md transition-all duration-300">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="font-bold text-slate-800 text-sm lg:text-lg">
-                            {message.name}
-                          </p>
-                          {!message.read && (
-                            <span className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></span>
-                          )}
-                        </div>
-                        <p className="text-slate-600 line-clamp-2 mb-2 text-sm">
-                          {message.message}
-                        </p>
-                        <p className="text-sm text-slate-500 font-medium">
-                          {message.createdAt.toLocaleDateString()}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                  <Link
-                    to="/admin/dashboard/messages"
-                    className="block text-center bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold py-3 lg:py-4 rounded-2xl mt-8 hover:from-orange-700 hover:to-amber-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm lg:text-base"
-                  >
-                    Voir tous les messages
-                  </Link>
-                </div>
-
-                {/* Order Status */}
-                <div className="bg-white rounded-3xl shadow-xl p-6 lg:p-8">
-                  <div className="flex items-center mb-8">
-                    <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                      <ShoppingBag className="w-5 h-5 lg:w-6 lg:h-6 text-white" />
+                  <div className="flex items-center justify-between p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl">
+                    <div className="flex items-center space-x-4">
+                      <CheckCircle className="w-5 h-5 lg:w-6 lg:h-6 text-green-500" />
+                      <span className="text-sm lg:text-lg font-bold text-green-700">Reçues</span>
                     </div>
-                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">
-                      Commandes de Figurines
-                    </h3>
+                    <span className="text-xl lg:text-2xl font-bold text-green-600">
+                      {Array.isArray(state.messages) 
+                        ? state.messages.filter(m => m && m.orderStatus === 'received').length 
+                        : 0}
+                    </span>
                   </div>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl hover:shadow-md transition-all duration-300">
-                      <div className="flex items-center space-x-4">
-                        <CheckCircle className="w-5 h-5 lg:w-6 lg:h-6 text-blue-500" />
-                        <span className="text-sm lg:text-lg font-bold text-blue-700">Commandes Confirmées</span>
-                      </div>
+                  <div className="flex items-center justify-between p-6 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl">
+                    <div className="flex items-center space-x-4">
+                      <XCircle className="w-5 h-5 lg:w-6 lg:h-6 text-red-500" />
+                      <span className="text-sm lg:text-lg font-bold text-red-700">Retournées</span>
+                    </div>
+                    <span className="text-xl lg:text-2xl font-bold text-red-600">
+                      {Array.isArray(state.messages) 
+                        ? state.messages.filter(m => m && m.orderStatus === 'returned').length 
+                        : 0}
+                    </span>
+                  </div>
+
+                  {/* ✅ Correction de la partie Total CA */}
+                  <div className="pt-6 border-t-2 border-slate-200">
+                    <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl">
+                      <span className="text-sm lg:text-lg font-bold text-slate-700">Total CA : </span>
                       <span className="text-xl lg:text-2xl font-bold text-amber-600">
-                        {state.messages ? state.messages.filter(m => m.orderStatus === 'confirmed').length : 0}
+                        {(Array.isArray(state.messages) 
+                          ? state.messages
+                              .filter(m => m && m.orderStatus === 'received' && typeof m.orderPrice === 'number')
+                              .reduce((total, m) => total + (m.orderPrice ?? 0), 0)
+                          : 0
+                        )} DH
                       </span>
-                    </div>
-                    <div className="flex items-center justify-between p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl hover:shadow-md transition-all duration-300">
-                      <div className="flex items-center space-x-4">
-                        <CheckCircle className="w-5 h-5 lg:w-6 lg:h-6 text-green-500" />
-                        <span className="text-sm lg:text-lg font-bold text-green-700">Reçues</span>
-                      </div>
-                      <span className="text-xl lg:text-2xl font-bold text-green-600">
-                        {state.messages ? state.messages.filter(m => m.orderStatus === 'received').length : 0}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between p-6 bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl hover:shadow-md transition-all duration-300">
-                      <div className="flex items-center space-x-4">
-                        <XCircle className="w-5 h-5 lg:w-6 lg:h-6 text-red-500" />
-                        <span className="text-sm lg:text-lg font-bold text-red-700">Retournées</span>
-                      </div>
-                      <span className="text-xl lg:text-2xl font-bold text-red-600">
-                        {state.messages ? state.messages.filter(m => m.orderStatus === 'returned').length : 0}
-                      </span>
-                    </div>
-                    <div className="pt-6 border-t-2 border-slate-200">
-                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl">
-                        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl">
-                          <span className="text-sm lg:text-lg font-bold text-slate-700">Total CA : </span>
-                          <span className="text-xl lg:text-2xl font-bold text-amber-600">
-                            {state.messages
-                              ? state.messages.filter(m => m.orderStatus === 'received' && m.orderPrice)
-                                .reduce((total, m) => total + (m.orderPrice || 0), 0) : 0} DH
-                          </span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
