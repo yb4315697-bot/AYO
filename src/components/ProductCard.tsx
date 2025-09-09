@@ -212,10 +212,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           
           <button
             onClick={handleAddToCart}
-            className="group/btn bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 flex items-center space-x-2 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            disabled={!product.stock || product.stock === 0}
+            className={`group/btn px-4 py-2 rounded-xl transition-all duration-300 flex items-center space-x-2 transform hover:scale-105 shadow-lg hover:shadow-xl ${
+              product.stock && product.stock > 0
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
           >
             <ShoppingCart className="w-4 h-4" />
-            <span className="font-medium">Ajouter</span>
+            <span className="font-medium">
+              {product.stock && product.stock > 0 ? 'Ajouter' : 'Rupture'}
+            </span>
           </button>
         </div>
       </div>

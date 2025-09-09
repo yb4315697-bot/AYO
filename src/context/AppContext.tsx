@@ -857,7 +857,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
       updateCartQuantity,
       clearCart,
       getCartTotal,
-      getCartItemsCount
+      getCartItemsCount,
+      updateProductStock,
+      addRevenueFromOrder
     }}>
       {children}
     </AppContext.Provider>

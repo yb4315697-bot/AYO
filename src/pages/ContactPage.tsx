@@ -43,6 +43,13 @@ const ContactPage: React.FC = () => {
 
     try {
       await addMessage(newMessage);
+      
+      // Si c'est une commande depuis le panier, vider le panier après envoi
+      if (isCartOrder) {
+        clearCart();
+        alert('Votre commande a été envoyée avec succès ! Votre panier a été vidé. Nous vous contacterons bientôt.');
+      }
+      
       setIsSubmitted(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error) {

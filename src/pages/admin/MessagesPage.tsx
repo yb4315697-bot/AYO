@@ -45,6 +45,24 @@ const MessagesPage: React.FC = () => {
       };
       await updateMessage(messageId, updateData);
       
+      // Si la commande est reçue, mettre à jour le stock et ajouter le revenu
+      if (status === 'received' && selectedMessage) {
+        const { updateProductStock, addRevenueFromOrder } = useApp();
+        
+        if (selectedMessage.productId && price) {
+          // Mettre à jour le stock (supposons quantité = 1 pour simplifier)
+          await updateProductStock(selectedMessage.productId, 1);
+          
+          // Ajouter le revenu
+          const productName = getTripName(selectedMessage.productId) || 'Figurine';
+          await addRevenueFromOrder({
+            productName,
+            amount: price,
+            quantity: 1
+          });
+        }
+      }
+      
       if (selectedMessage?.id === messageId) {
         setSelectedMessage({
           ...selectedMessage,

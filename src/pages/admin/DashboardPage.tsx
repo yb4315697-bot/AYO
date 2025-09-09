@@ -362,13 +362,19 @@ const DashboardPage: React.FC = () => {
                             )}
                           </p>
                         </div>
-                        <span className={`px-2 py-1 lg:px-3 lg:py-2 rounded-xl text-xs lg:text-sm font-bold ${
-                          product.inStock 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {product.inStock ? 'En Stock' : 'Rupture'}
-                        </span>
+                        {(() => {
+                          const getStockStatus = (stock: number) => {
+                            if (stock > 5) return { color: 'text-green-800', bg: 'bg-green-100', icon: '✅' };
+                            if (stock > 0) return { color: 'text-orange-800', bg: 'bg-orange-100', icon: '🟧' };
+                            return { color: 'text-red-800', bg: 'bg-red-100', icon: '❌' };
+                          };
+                          const stockStatus = getStockStatus(product.stock || 0);
+                          return (
+                            <span className={`px-2 py-1 lg:px-3 lg:py-2 rounded-xl text-xs lg:text-sm font-bold ${stockStatus.bg} ${stockStatus.color}`}>
+                              {stockStatus.icon} {product.stock || 0}
+                            </span>
+                          );
+                        })()}
                       </div>
                     ))}
                   </div>

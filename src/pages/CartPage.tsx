@@ -17,7 +17,7 @@ const CartPage: React.FC = () => {
   const generateCartMessage = () => {
     if (state.cart.length === 0) return '';
     
-    let message = 'Bonjour, je souhaite réserver les voyages suivants :\n\n';
+    let message = 'Bonjour, je souhaite commander les figurines suivantes :\n\n';
     
     state.cart.forEach((item, index) => {
       message += `${index + 1}. ${item.product.name}`;
